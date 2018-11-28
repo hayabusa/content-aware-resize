@@ -3,6 +3,7 @@
 #include <iostream>
 
 namespace xinar {
+
     //TODO: edit this function to apply resizing width with mask.
     void _mask_resize_width(core::MatWrp& in, core::MatWrp& maskin, int delta, std::shared_ptr<filter::Filter> filter) {
         if (delta == 0) return;
