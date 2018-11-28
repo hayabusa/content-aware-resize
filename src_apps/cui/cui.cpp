@@ -3,7 +3,15 @@
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
+ #include "opencv2/objdetect/objdetect.hpp"
+ #include "opencv2/highgui/highgui.hpp"
+ #include "opencv2/imgproc/imgproc.hpp"
+ #include <iostream>
+ #include <stdio.h>
+
+
 using namespace xinar_utils;
+using namespace cv;
 
 int main(int argc, char **argv) {
     auto config = Singleton<io::Config>::Instance();
@@ -43,11 +51,28 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    auto image = in.read_image();
+    cv::Mat image_gray;
+    
+    //Generate Face Mask
+    auto canvas = image.clone();
+
+
     if (vm.count("mask")) {
         maskin = io::bind_input(vm["mask"].as<std::string>());
-    } else {
-        std::cerr << "No mask file providen!\n";
-        return 1;
+        canvas = maskin.read_image();
+    } else{
+        canvas=cv::Scalar(255, 255, 255);
+        CascadeClassifier face_cascade;
+        face_cascade.load("haarcascade_frontalface_alt.xml" );
+        std::vector<Rect> faces;
+        cvtColor(image, image_gray, COLOR_BGR2GRAY);
+        equalizeHist(image_gray, image_gray);
+        face_cascade.detectMultiScale( image_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(80, 80) );
+        for( int i = 0; i < faces.size(); i++ ){
+            Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+            ellipse(canvas, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 0, 0, 0 ),-1, CV_AA );
+        }
     }
 
     if (vm.count("output-file")) {
@@ -56,8 +81,7 @@ int main(int argc, char **argv) {
         out = io::bind_output(create_default_filepath(in.get_path()));
     }
 
-    auto image = in.read_image();
-    auto maskimage = maskin.read_image();
+
 
     if (image.empty()) {
         std::cerr << "Error while opening file. Passed: \"" << in.get_path() << "\"\n";
@@ -88,8 +112,9 @@ int main(int argc, char **argv) {
     }
 
     cv::Mat output;
-    //xinar::resize(image, output, size);
-    xinar::maskresize(image, maskimage, output, size);
+
+    // out.write_image(canvas);
+    xinar::maskresize(image, canvas, output, size);
     out.write_image(output);
     return 0;
 }

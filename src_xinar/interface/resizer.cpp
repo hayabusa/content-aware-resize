@@ -15,8 +15,9 @@ namespace xinar {
         (*filter)(in.mat, energy_wrp.mat);
         (*filter)(maskin.mat, super_energy_wrp.mat);
         // (*filter)(in.mat, energy_wrp.mat);
+        // std::cout << energy_wrp.mat << std::endl;
         cv::add(super_energy_wrp.mat, energy_wrp.mat, energy_wrp.mat);
-        
+        // std::cout << super_energy_wrp.mat << std::endl;
         auto seams = core::get_seams(energy_wrp, std::abs(delta));
         core::process_seams(in, seams, delta < 0);
     }
@@ -112,6 +113,7 @@ namespace xinar {
         _mask_resize_width(in_wrp, mask_wrp, h_delta, filter);
         out = in_wrp.mat;
     }
+    
     void resize(const cv::Mat& image, cv::Mat& out, cv::Size new_size) {
         int orig_w = image.cols,
             orig_h = image.rows;
