@@ -7,15 +7,15 @@ Project consist from console application (cxinar) and library *xinar* for ```C++
 ### Example
 *Befoe Seam Carving*
 
-![alt text](vie.jpg)
+![alt text](example/vie.jpg)
 
 *Seam Carving with Mask*
 
-![alt text](a.jpg)
+![alt text](example/a.jpg)
 
 *Seam Carving without Mask*
 
-![alt text](a2.jpg)
+![alt text](example/a2.jpg)
 ### How Seam Carving Works
 Seam carving (or liquid rescaling) is an algorithm for content-aware image resizing, developed by Shai Avidan, of Mitsubishi Electric Research Laboratories (MERL), and Ariel Shamir, of the Interdisciplinary Center and MERL. It functions by establishing a number of seams (paths of least importance) in an image and automatically removes seams to reduce image size or inserts seams to extend it. Seam carving also allows manually defining areas in which pixels may not be modified, and features the ability to remove whole objects from photographs.
 
