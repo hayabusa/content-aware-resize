@@ -23,6 +23,7 @@ The purpose of the algorithm is image retargeting, which is the problem of displ
 
 ### How Mask & Face Detection Works
 In the Energy Map, we will give the Masked Parts with High Energy Value.
+
 ![alt text](example/ab.jpg)
 
 *Face Detection Generated Mask*
@@ -36,8 +37,6 @@ Xinar builds as shared library so you don't need anything to build it from sourc
 But you have to have *opencv2* on your PC and *OpenCV_LIBS* linked to your application, wich uses xinar. 
 
 To build console or graphic application from source you need
-* *Qt5 core* (*only for uxinar*)
-* *Qt5 widgets* (*only for uxinar*)
 * *libboost-program-options* (*only for cxinar*)
 * *libboost-filesystem* (*only for cxinar*)
 * *libboost-system* (*only for cxinar*)
