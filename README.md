@@ -6,10 +6,15 @@ Project consist from console application (cxinar) and library *xinar* for ```C++
 
 ### Example
 *Befoe Seam Carving*
+
 ![alt text](vie.jpg)
+
 *Seam Carving with Mask*
+
 ![alt text](a.jpg)
+
 *Seam Carving without Mask*
+
 ![alt text](a2.jpg)
 ### How Seam Carving Works
 
