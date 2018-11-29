@@ -5,7 +5,12 @@ algorithm with Mask and Face Detection Functions.
 Project consist from console application (cxinar) and library *xinar* for ```C++```, which provide resize services.
 
 ### Example
-
+*Befoe Seam Carving*
+![alt text](vie.jpg)
+*Seam Carving with Mask*
+![alt text](a.jpg)
+*Seam Carving without Mask*
+![alt text](a2.jpg)
 ### How Seam Carving Works
 
 ### How Mask & Face Detection Works
