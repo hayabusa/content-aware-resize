@@ -1,10 +1,14 @@
 ### About
 This is an implementation of the 
 [real time content aware resize](https://link.springer.com/article/10.1007/s11432-009-0041-9)
-algorithm.
-Project consist from console and gui applications (cxinar and uxinar
-respectively) and library *xinar* for ```C++```, which provide resize services.
+algorithm with Mask and Face Detection Functions.
+Project consist from console application (cxinar) and library *xinar* for ```C++```, which provide resize services.
 
+### Example
+
+### How Seam Carving Works
+
+### How Mask & Face Detection Works
 
 ### Dependencies and building
 
@@ -35,8 +39,7 @@ You can use *cxinar* in two ways: as a ```C++``` library and as an application.
 
 
 #### Application usage
-Once you built *cxinar*, you can use it in 2 ways: as a console application or
-via GUI.
+Once you built *cxinar*, you can use it as a console application.
 
 Console usage example:
 
@@ -45,6 +48,13 @@ Resize image ```examle.jpg``` using mask ```mask.jpg``` to 600 by 600 pixels:
 ```
 :~$ ./cxinar -m mask.jpg -i example.jpg -w 600 -h 600
 ```
+
+Resize image ```examle.jpg``` using built in *Face Detection Mask* to 600 by 600 pixels:
+
+```
+:~$ ./cxinar -i example.jpg -w 600 -h 600
+```
+
 All commands are available via ``` -? ``` (```--help```) flag.
 
 
@@ -68,6 +78,7 @@ int main() {
 
     // For single usage
     xinar::resize(cv_image, cv_output, cv_size);
+    xinar::maskresize(cv_image, cv_mask, cv_output, cv_size);
     
     // For multiple usage
     xinar::Resize resizer(cv_image);
