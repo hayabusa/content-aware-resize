@@ -21,6 +21,7 @@ namespace xinar {
         // std::cout << super_energy_wrp.mat << std::endl;
         auto seams = core::get_seams(energy_wrp, std::abs(delta));
         core::process_seams(in, seams, delta < 0);
+        core::process_seams(maskin, seams, delta < 0);
     }
 
     void _resize_width(core::MatWrp& in, int delta, std::shared_ptr<filter::Filter> filter) {
