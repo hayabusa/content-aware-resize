@@ -23,6 +23,11 @@ The purpose of the algorithm is image retargeting, which is the problem of displ
 
 ### How Mask & Face Detection Works
 In the Energy Map, we will give the Masked Parts with High Energy Value.
+![alt text](example/ab.jpg)
+
+*Face Detection Generated Mask*
+
+![alt text](example/cao.jpg)
 
 
 ### Dependencies and building
