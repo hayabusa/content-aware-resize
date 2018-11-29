@@ -1,9 +1,34 @@
 ### About
 This is an implementation of the 
 [real time content aware resize](https://link.springer.com/article/10.1007/s11432-009-0041-9)
-algorithm.
-Project consist from console and gui applications (cxinar and uxinar
-respectively) and library *xinar* for ```C++```, which provide resize services.
+algorithm with Mask and Face Detection Functions.
+Project consist from console application (cxinar) and library *xinar* for ```C++```, which provide resize services.
+
+### Example
+*Befoe Seam Carving*
+
+![alt text](example/vie.jpg)
+
+*Seam Carving with Mask*
+
+![alt text](example/a.jpg)
+
+*Seam Carving without Mask*
+
+![alt text](example/a2.jpg)
+### How Seam Carving Works
+Seam carving (or liquid rescaling) is an algorithm for content-aware image resizing, developed by Shai Avidan, of Mitsubishi Electric Research Laboratories (MERL), and Ariel Shamir, of the Interdisciplinary Center and MERL. It functions by establishing a number of seams (paths of least importance) in an image and automatically removes seams to reduce image size or inserts seams to extend it. Seam carving also allows manually defining areas in which pixels may not be modified, and features the ability to remove whole objects from photographs.
+
+The purpose of the algorithm is image retargeting, which is the problem of displaying images without distortion on media of various sizes (cell phones, projection screens) using document standards, like HTML, that already support dynamic changes in page layout and text but not images.
+
+### How Mask & Face Detection Works
+In the Energy Map, we will give the Masked Parts with High Energy Value.
+
+![alt text](example/ab.jpg)
+
+*Face Detection Generated Mask*
+
+![alt text](example/cao.jpg)
 
 
 ### Dependencies and building
@@ -12,8 +37,6 @@ Xinar builds as shared library so you don't need anything to build it from sourc
 But you have to have *opencv2* on your PC and *OpenCV_LIBS* linked to your application, wich uses xinar. 
 
 To build console or graphic application from source you need
-* *Qt5 core* (*only for uxinar*)
-* *Qt5 widgets* (*only for uxinar*)
 * *libboost-program-options* (*only for cxinar*)
 * *libboost-filesystem* (*only for cxinar*)
 * *libboost-system* (*only for cxinar*)
@@ -35,23 +58,24 @@ You can use *cxinar* in two ways: as a ```C++``` library and as an application.
 
 
 #### Application usage
-Once you built *cxinar*, you can use it in 2 ways: as a console application or
-via GUI.
+Once you built *cxinar*, you can use it as a console application.
 
 Console usage example:
 
-Resize image ```examle.jpg``` to 600 by 600 pixels:
+Resize image ```examle.jpg``` using mask ```mask.jpg``` to 600 by 600 pixels:
+
+```
+:~$ ./cxinar -m mask.jpg -i example.jpg -w 600 -h 600
+```
+
+Resize image ```examle.jpg``` using built in *Face Detection Mask* to 600 by 600 pixels:
 
 ```
 :~$ ./cxinar -i example.jpg -w 600 -h 600
 ```
+
 All commands are available via ``` -? ``` (```--help```) flag.
 
-
-GUI usage example:
-
-Just run *uxinar* as executable and choose file to resize in the file menu. 
-To resize change size of the window.
 
 **NOTE:** Xinar can resize picture up to 2 times in both height and width 
 while expanding picture.
@@ -73,6 +97,7 @@ int main() {
 
     // For single usage
     xinar::resize(cv_image, cv_output, cv_size);
+    xinar::maskresize(cv_image, cv_mask, cv_output, cv_size);
     
     // For multiple usage
     xinar::Resize resizer(cv_image);

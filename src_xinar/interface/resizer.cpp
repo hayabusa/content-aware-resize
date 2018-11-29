@@ -1,7 +1,29 @@
 #include "xinar.h"
 #include "core.h"
+#include <iostream>
 
 namespace xinar {
+
+    //TODO: edit this function to apply resizing width with mask.
+    void _mask_resize_width(core::MatWrp& in, core::MatWrp& maskin, int delta, std::shared_ptr<filter::Filter> filter) {
+        if (delta == 0) return;
+        core::MatWrp energy_wrp(in.mat.rows, in.mat.cols, in.mat.type());
+        energy_wrp.set_orientation(in);        
+        core::MatWrp super_energy_wrp(maskin.mat.rows, maskin.mat.cols, maskin.mat.type());
+        energy_wrp.set_orientation(maskin);
+        // core::MatWrp in_temp(in.mat.clone());
+        // cv::Mat & mapc = in_temp.mat;
+        (*filter)(in.mat, energy_wrp.mat);
+        (*filter)(maskin.mat, super_energy_wrp.mat);
+        // (*filter)(in.mat, energy_wrp.mat);
+        // std::cout << energy_wrp.mat << std::endl;
+        cv::add(super_energy_wrp.mat, energy_wrp.mat, energy_wrp.mat);
+        // std::cout << super_energy_wrp.mat << std::endl;
+        auto seams = core::get_seams(energy_wrp, std::abs(delta));
+        core::process_seams(in, seams, delta < 0);
+        core::process_seams(maskin, seams, delta < 0);
+    }
+
     void _resize_width(core::MatWrp& in, int delta, std::shared_ptr<filter::Filter> filter) {
         if (delta == 0) return;
         core::MatWrp energy_wrp(in.mat.rows, in.mat.cols, in.mat.type());
@@ -68,6 +90,32 @@ namespace xinar {
         result = in_wrp.mat;
     }
 
+    void maskresize(const cv::Mat& image, const cv::Mat& maskimage, cv::Mat& out, cv::Size new_size) {
+        int orig_w = image.cols,
+            orig_h = image.rows;
+        int h_delta = new_size.height - orig_h,
+            w_delta = new_size.width - orig_w;
+
+        h_delta = std::min(std::abs(h_delta), orig_h) * (h_delta < 0 ? -1 : 1);
+        w_delta = std::min(std::abs(w_delta), orig_w) * (w_delta < 0 ? -1 : 1);
+        
+        core::MatWrp in_wrp(image.clone());
+        core::MatWrp mask_wrp(maskimage.clone());
+
+        auto filter = build_filters();
+        if (w_delta + in_wrp.width() > h_delta + in_wrp.height()) {
+            std::swap(w_delta, h_delta);
+            in_wrp.transpose();
+            mask_wrp.transpose();
+        }
+
+        _mask_resize_width(in_wrp, mask_wrp, w_delta, filter);
+        in_wrp.transpose();
+        mask_wrp.transpose();
+        _mask_resize_width(in_wrp, mask_wrp, h_delta, filter);
+        out = in_wrp.mat;
+    }
+    
     void resize(const cv::Mat& image, cv::Mat& out, cv::Size new_size) {
         int orig_w = image.cols,
             orig_h = image.rows;
@@ -78,6 +126,7 @@ namespace xinar {
         w_delta = std::min(std::abs(w_delta), orig_w) * (w_delta < 0 ? -1 : 1);
         
         core::MatWrp in_wrp(image.clone());
+        
         auto filter = build_filters();
         if (w_delta + in_wrp.width() > h_delta + in_wrp.height()) {
             std::swap(w_delta, h_delta);
